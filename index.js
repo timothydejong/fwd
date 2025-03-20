@@ -7,11 +7,8 @@ const readline = require("readline");
 const fs = require('node:fs');
 
 
-console.log('0000000000');
 
 const main = () => {
-
-    /*
 
     const apiId = 21312114;
     const apiHash = "3516a410d2b9f2c26461eef3ad5bbba4";
@@ -102,7 +99,6 @@ const main = () => {
         await client.disconnect();
         rl.close();
     })();
-    */
 
     console.log('1111111111111');
 
