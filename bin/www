@@ -50,88 +50,88 @@ const main = () => {
   const TARGET_GROUP = "-4679563894"; // Replace with actual target group username or ID
 
   const rl = readline.createInterface({
-      input: process.stdin,
-      output: process.stdout,
+    input: process.stdin,
+    output: process.stdout,
   });
 
   let saveMessageId = (id) => {
-      const content = 'Some content!';
-      fs.writeFile('messages/' + id, "123", err => {
-          if (err) {
-              console.error(err);
-          } else {
-              // file written successfully
-          }
-      });
+    const content = 'Some content!';
+    fs.writeFile('messages/' + id, "123", err => {
+      if (err) {
+        console.error(err);
+      } else {
+        // file written successfully
+      }
+    });
   };
 
   (async () => {
-      console.log("Loading interactive example...");
-      const client = new TelegramClient(stringSession, apiId, apiHash, {
-          connectionRetries: 5,
+    console.log("Loading interactive example...");
+    const client = new TelegramClient(stringSession, apiId, apiHash, {
+      connectionRetries: 5,
+    });
+    await client.start({
+      phoneNumber: "+31640743556",
+      password: async () =>
+        new Promise((resolve) =>
+          rl.question("Please enter your password: ", resolve)
+        ),
+      phoneCode: async () =>
+        new Promise((resolve) =>
+          rl.question("Please enter the code you received: ", resolve)
+        ),
+      onError: (err) => console.log(err),
+    });
+    console.log("You should now be connected.");
+
+    try {
+      // Get the source and target group entities
+      const sourceGroup = await client.getEntity(SOURCE_GROUP);
+      console.log("Source group found:", sourceGroup.title);
+
+      const targetGroup = await client.getEntity(TARGET_GROUP);
+
+      console.log("Target group found:", targetGroup.title);
+
+      // Get the most recent messages from source group
+      const messages = await client.getMessages(sourceGroup, {
+        limit: 1 // Adjust this number based on how many messages you want to forward
       });
-      await client.start({
-          phoneNumber: "+31640743556",
-          password: async () =>
-              new Promise((resolve) =>
-                  rl.question("Please enter your password: ", resolve)
-              ),
-          phoneCode: async () =>
-              new Promise((resolve) =>
-                  rl.question("Please enter the code you received: ", resolve)
-              ),
-          onError: (err) => console.log(err),
-      });
-      console.log("You should now be connected.");
 
-      try {
-          // Get the source and target group entities
-          const sourceGroup = await client.getEntity(SOURCE_GROUP);
-          console.log("Source group found:", sourceGroup.title);
+      if (messages.length > 0) {
+        console.log(`Found ${messages.length} messages to forward`);
 
-          const targetGroup = await client.getEntity(TARGET_GROUP);
+        messages.filter((m) => {
+          saveMessageId(m.id);
+        });
 
-          console.log("Target group found:", targetGroup.title);
+        // Forward the messages
+        // await client.forwardMessages(targetGroup, {
+        //     fromPeer: sourceGroup,
+        //     messages: messages.map(msg => msg.id)
+        // });
 
-          // Get the most recent messages from source group
-          const messages = await client.getMessages(sourceGroup, {
-              limit: 1 // Adjust this number based on how many messages you want to forward
-          });
+        // messages.forEach((i, mid)=>{
+        //     saveMessageId(mid);
+        // });
 
-          if (messages.length > 0) {
-              console.log(`Found ${messages.length} messages to forward`);
-
-              messages.filter((m) => {
-                  saveMessageId(m.id);
-              });
-
-              // Forward the messages
-              // await client.forwardMessages(targetGroup, {
-              //     fromPeer: sourceGroup,
-              //     messages: messages.map(msg => msg.id)
-              // });
-
-              // messages.forEach((i, mid)=>{
-              //     saveMessageId(mid);
-              // });
-
-              console.log("Messages forwarded successfully!");
-          } else {
-              console.log("No messages found to forward");
-          }
-
-      } catch (error) {
-          console.error("Error occurred:", error);
+        console.log("Messages forwarded successfully!");
+      } else {
+        console.log("No messages found to forward");
       }
 
-      // Close the client
-      await client.disconnect();
-      rl.close();
+    } catch (error) {
+      console.error("Error occurred:", error);
+    }
+
+    // Close the client
+    await client.disconnect();
+    rl.close();
   })();
 
   console.log('1111111111111');
 
-  return { "body": greeting };
+  return { "body": "dssd" };
 
 };
 
@@ -188,7 +188,7 @@ function onListening() {
   var addr = server.address();
   var bind = typeof addr === 'string'
     ? 'pipe ' + addr
-	: 'port ' + addr.port;
+    : 'port ' + addr.port;
 
   for (let line of startupMessage.split("\n")) {
     console.log(line);
