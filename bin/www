@@ -128,7 +128,7 @@ const main = () => {
     await client.disconnect();
     rl.close();
   })();
-
+  
   console.log('1111111111111');
 
   return { "body": "dssd" };
@@ -196,7 +196,7 @@ function onListening() {
 
   console.log('Server listening on ' + bind + ' 🚀');
 
-  main();
+  // main();
 
 }
 
