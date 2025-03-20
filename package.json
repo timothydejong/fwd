@@ -17,6 +17,7 @@
     "mersenne-twister": "^1.1.0",
     "morgan": "~1.9.1",
     "pug": "^2.0.4",
+    "telegram": "^2.26.22",
     "uglify-js": "^2.6.0"
   }
 }
